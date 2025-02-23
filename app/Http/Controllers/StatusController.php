@@ -10,12 +10,22 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StatusController extends Controller {
-    public function updateStatus(Request $request) {
-        Status::create($request->all());
-        return response()->json(['message' => 'Status updated']);
-    }
+    public function updateStatus(Request $request)
+{
+    $request->validate([
+        'status_text' => 'required|string|max:255'
+    ]);
 
-    public function viewStatus() {
-        return response()->json(Status::all());
-    }
+    $status = Status::updateOrCreate(
+        ['user_id' => Auth::id()],
+        ['status_text' => $request->status_text]
+    );
+
+    return response()->json(['message' => 'Status updated', 'status' => $status]);
+}
+public function viewStatus()
+{
+    $statuses = Status::all();
+    return response()->json(['statuses' => $statuses]);
+}
 }

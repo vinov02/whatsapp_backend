@@ -12,10 +12,12 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/send-otp', [AuthController::class, 'sendOtp']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 
-Route::middleware('auth:api')->group(function () {
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/update', [ProfileController::class, 'update']);
     Route::get('/profile', [ProfileController::class, 'show']);
 
